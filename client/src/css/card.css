@@ -4,3 +4,8 @@
   flex-direction: column;
   align-items: baseline;
 }
+
+.MuiCardHeader-content .MuiCardMedia-img {
+  border: none;
+  border-radius: 0px;
+}

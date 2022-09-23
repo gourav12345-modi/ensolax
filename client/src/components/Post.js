@@ -25,14 +25,14 @@ import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: '100%',
-    margin:'20px',
-    marginBottom:'30px',
+    width: '300px',
+    margin:'10px',
+    marginBottom: '10px',
     backgroundColor: theme.palette.grey[100]
   },
   media: {
-    height: 0,
-    paddingTop: '56.25%', // 16:9
+    maxWidth: '100%',
+    maxHeight: '500px'
   },
   expand: {
     transform: 'rotate(0deg)',
@@ -48,6 +48,10 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: red[500],
     cursor: 'pointer',
   },
+  avatarLink: {
+    textDecoration: 'none'
+  },
+
 }));
 
 export default function Post({postData, history}) {
@@ -79,7 +83,7 @@ export default function Post({postData, history}) {
     <Card className={classes.root} >
       <CardHeader
         avatar={
-          <Link to={`/user/${postData.author._id}`}>
+          <Link to={`/user/${postData.author._id}`} className={classes.avatarLink}>
           <Avatar aria-label="recipe" className={classes.avatar}>
             {postData.author.name.charAt(0)}
           </Avatar>
@@ -118,10 +122,10 @@ export default function Post({postData, history}) {
       {
         postData.images && postData.images.map((image) => (
           <CardMedia
+            component="img"
             id={image}
             className={classes.media}
             image={`http://localhost:1300/uploads/${image}`}
-            title="Paella dish"
             key={`http://localhost:1300/uploads/${image}`}
           />
         ))

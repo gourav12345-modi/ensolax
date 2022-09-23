@@ -115,9 +115,6 @@ function Home(props) {
             
              postData.selectedFile && postData.selectedFile.map((file, index) => (
               <div style={{position: 'relative', background:'gainboro', width: 'fit-Content', margin: 'auto'}} key={index}>
-                {
-                  console.log(file)
-                }
              <img  src={URL.createObjectURL(file)} className={classes.uploadImage} alt="ok "/> 
              <IconButton aria-label="post" style={{position: 'absolute', top: '0', right:'0', color: 'gray'}} onClick={(e)=>{handleRemoveImage(e,file)} }>
              <HighlightOffIcon />
@@ -151,7 +148,7 @@ function Home(props) {
             </div>
           )
         }
-        <div className="posts" style={{ paddingTop: '50px', display: 'flex', flexWrap: 'wrap', justifyContent: 'center' , alignItems: 'flex-start'}}>
+        <div className="posts" style={{ paddingTop: '30px', display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-start' , alignItems: 'flex-start'}}>
           {
         
            posts && posts.map((postData) => (
