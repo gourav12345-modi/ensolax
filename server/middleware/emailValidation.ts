@@ -1,5 +1,6 @@
 const Joi = require('joi');
-const { BadRequest } = require('./errorHandler');
+import { BadRequest } from "./errorHandler";
+import { Request, Response, NextFunction } from 'express';
 
 const emailValidationSchema = Joi.object({
   email: Joi.string()
@@ -12,7 +13,7 @@ const emailValidationSchema = Joi.object({
     }),
 });
 
-const emailValidation = (req, res, next) => {
+const emailValidation = (req: Request, res: Response, next: NextFunction) => {
   const { email } = req.body;
   const result = emailValidationSchema.validate({ email });
   if (result.error) {

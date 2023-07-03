@@ -1,6 +1,7 @@
-const { BadRequest } = require('./errorHandler');
+import { BadRequest } from "./errorHandler";
+import { Request, Response, NextFunction } from 'express';
 
-const passwordValidation = (req, res, next) => {
+const passwordValidation = (req: Request, res: Response, next: NextFunction) => {
   const { password, confirmPassword } = req.body;
   const capital = new RegExp('(?=.*[A-Z])');
   const lower = new RegExp('(?=.*[a-z])');

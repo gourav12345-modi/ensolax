@@ -1,6 +1,6 @@
 const router = require('express').Router();
-const auth = require('../middleware/auth');
-const postController = require('../controllers/postController');
+import auth from '../middleware/auth';
+import * as postController from '../controllers/postController';
 
 // Create new Post
 router.post('/', auth, postController.createNewPost);
@@ -12,4 +12,5 @@ router.get('/:id', postController.getPostById);
 router.patch('/:id', auth, postController.updatePost);
 // delete
 router.delete('/:id', auth, postController.deletePost);
-module.exports = router;
+
+export default router;

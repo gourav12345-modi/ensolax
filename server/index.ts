@@ -1,13 +1,14 @@
-require('dotenv').config();
-const express = require('express');
-const mongoose = require('mongoose');
-const helmet = require('helmet');
-const morgan = require('morgan');
-const cookieParser = require('cookie-parser');
+import express from 'express';
+import mongoose from 'mongoose';
+import helmet from 'helmet';
+import morgan from 'morgan';
+import cookieParser from 'cookie-parser';
 
-const postRouter = require('./router/post');
-const userRouter = require('./router/user');
-const { errorHandler } = require('./middleware/errorHandler');
+import postRouter from './router/post';
+import userRouter from './router/user';
+import { errorHandler } from './middleware/errorHandler';
+
+require('dotenv').config();
 
 const app = express();
 const DBURL = 'mongodb://localhost:27017/ensolax';
@@ -20,8 +21,11 @@ app.use((req, res, next) => {
   // res.setHeader('Access-Control-Allow-Credentials', true);
   next();
 });
+
+app.disable('x-powered-by');
 app.use(express.json());
 app.use(helmet());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(morgan('combined'));
 app.use('/uploads', express.static('uploads'));
@@ -37,8 +41,11 @@ const { connection } = mongoose;
 
 connection.once('open', () => {
   console.log('connected to database');
-}).catch((err) => {
-  console.log(err);
+})
+
+connection.on("error", function(err) {
+  console.log("Could not connect to mongo server!");
+  return console.log(err);
 });
 
 app.get('/', (req, res) => {

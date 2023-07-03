@@ -13,4 +13,4 @@ router.post('/logout', userController.logout);
 // getUser Information
 router.get('/getUserInfo', auth, userController.getUserInfo);
 
-module.exports = router;
+export default router;

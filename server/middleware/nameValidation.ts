@@ -1,5 +1,6 @@
 const Joi = require('joi');
-const { BadRequest } = require('./errorHandler');
+import { BadRequest } from "./errorHandler";
+import { Request, Response, NextFunction } from 'express';
 
 const registerValidationSchema = Joi.object({
   name: Joi.string()
@@ -12,7 +13,7 @@ const registerValidationSchema = Joi.object({
     }),
 });
 
-const registerValidation = (req, res, next) => {
+const registerValidation = (req: Request, res: Response, next: NextFunction) => {
   const { name } = req.body;
   const result = registerValidationSchema.validate({ name });
   if (result.error) {

@@ -3,3 +3,4 @@ node_modules
 help.txt
 Readme.md
 TODO
+/dist

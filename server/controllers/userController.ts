@@ -1,17 +1,19 @@
+import { Request, Response, NextFunction } from "express";
+import { AuthRequest, IUser } from "type";
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { DuplicateData, WrongCredentials } = require('../middleware/errorHandler');
 
 // Register user
-const register = (req, res, next) => {
+const register = (req: Request, res: Response, next: NextFunction) => {
   // Getting data
   const {
     name, email, password,
   } = req.body;
 
   // Check if the user already exist or not
-  User.exists({ email }).then(async (user) => {
+  User.exists({ email }).then(async (user: IUser) => {
     // if user is already their in Database
     if (user) {
       throw new DuplicateData('User with same email already exist.');
@@ -26,27 +28,27 @@ const register = (req, res, next) => {
     });
 
     // save newUser
-    newUser.save().then((_result) => {
+    newUser.save().then((_result: IUser) => {
       res.status(201).json({ message: 'User created' });
-    }).catch((error) => {
+    }).catch((error: Error) => {
       next(error);
     });
-  }).catch((error) => {
+  }).catch((error: Error) => {
     next(error);
   });
 };
 
 // User login
-const login = (req, res, next) => {
+const login = (req: Request, res: Response, next: NextFunction) => {
   // Getting data
   const { email, password } = req.body;
 
   // If user already registered or not
-  User.findOne({ email }).then((user) => {
+  User.findOne({ email }).then((user: IUser) => {
     // If their is user in Database
     if (user) {
       // checking password
-      bcrypt.compare(password, user.password).then((match) => {
+      bcrypt.compare(password, user.password).then((match: boolean) => {
         if (match) {
           const token = jwt.sign({
             id: user._id,
@@ -54,14 +56,14 @@ const login = (req, res, next) => {
             email: user.email,
           }, process.env.JWT_TOKEN_SECRET);
 
-          user.token = token;
           user.save().then((_result) => {
             res.cookie('token', token, {
               httpOnly: true,
               // samesite: 'lax',
               // secure: true,
               path: '/api',
-            }, { maxAge: 1000 * 60 * 60 * 24 * 365 });
+              maxAge: 1000 * 60 * 60 * 24 * 365
+            },  );
             // send res
             return res.status(200).json({
               name: user.name,
@@ -72,37 +74,30 @@ const login = (req, res, next) => {
         } else {
           throw new WrongCredentials('Wrong credentials.');
         }
-      }).catch((error) => {
+      }).catch((error: Error) => {
         next(error);
       });
     } else {
       throw new WrongCredentials('Wrong credentials');
     }
-  }).catch((error) => next(error));
+  }).catch((error: Error) => next(error));
 };
 
 // user logout
-const logout = (req, res, next) => {
+const logout = (req: AuthRequest, res: Response, next: NextFunction) => {
   const { token } = req.cookies;
   // clear cookie
   res.clearCookie('token', { path: '/api' });
-  // remove token from Database
-  User.updateOne({ token }, {
-    token: '',
-  }).then((user) => res.json({ message: 'Logged Out' }))
-    .catch((error) => next(error));
+  res.json({ message: 'Logged Out' })
 };
 
 // getUser information
-const getUserInfo = (req, res) => {
-  if (req.user) {
+const getUserInfo = (req: AuthRequest, res: Response) => {
     return res.json({
       name: req.user.name,
       email: req.user.email,
       id: req.user.id,
     });
-  }
-  throw new WrongCredentials('Unautharized user.');
 };
 
 module.exports = {

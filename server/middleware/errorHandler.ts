@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 const multer = require('multer');
+import { Request, Response, NextFunction } from 'express';
 
 class GeneralError extends Error {
-  constructor(message) {
+  constructor(message: string) {
     super();
     this.message = message;
   }
@@ -35,7 +36,7 @@ class DuplicateData extends GeneralError { }
 class WrongCredentials extends GeneralError { }
 class PostNotFound extends GeneralError { }
 
-const errorHandler = (error, req, res, next) => {
+const errorHandler = (error: Error, req: Request, res: Response, next: NextFunction) => {
   console.log(error.message);
   if (error instanceof PostNotFound) {
     return res.status(404).json({ message: 'Post not found.' });
@@ -61,7 +62,7 @@ const errorHandler = (error, req, res, next) => {
   });
 };
 
-module.exports = {
+export {
   errorHandler,
   BadRequest,
   PostNotFound,
