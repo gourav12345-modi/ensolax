@@ -25,4 +25,4 @@ const passwordValidation = (req: Request, res: Response, next: NextFunction) => 
   next();
 };
 
-module.exports = passwordValidation;
+export default passwordValidation;

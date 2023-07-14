@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import { AuthRequest, IUser } from "type";
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const User = require('../models/user');
-const { DuplicateData, WrongCredentials } = require('../middleware/errorHandler');
+import bcrypt from "bcrypt";
+import jwt from 'jsonwebtoken'
+import User from '../models/user'
+import { DuplicateData, WrongCredentials }  from "../middleware/errorHandler"
 
 // Register user
 const register = (req: Request, res: Response, next: NextFunction) => {
@@ -13,9 +13,9 @@ const register = (req: Request, res: Response, next: NextFunction) => {
   } = req.body;
 
   // Check if the user already exist or not
-  User.exists({ email }).then(async (user: IUser) => {
+  User.exists({ email }).then(async (userPresent: boolean) => {
     // if user is already their in Database
-    if (user) {
+    if (userPresent) {
       throw new DuplicateData('User with same email already exist.');
     }
 
@@ -54,7 +54,7 @@ const login = (req: Request, res: Response, next: NextFunction) => {
             id: user._id,
             name: user.name,
             email: user.email,
-          }, process.env.JWT_TOKEN_SECRET);
+          }, process.env.JWT_TOKEN_SECRET!);
 
           user.save().then((_result) => {
             res.cookie('token', token, {
@@ -100,7 +100,7 @@ const getUserInfo = (req: AuthRequest, res: Response) => {
     });
 };
 
-module.exports = {
+export {
   register,
   login,
   logout,

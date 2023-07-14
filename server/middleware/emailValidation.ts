@@ -22,4 +22,4 @@ const emailValidation = (req: Request, res: Response, next: NextFunction) => {
   next();
 };
 
-module.exports = emailValidation;
+export default emailValidation;

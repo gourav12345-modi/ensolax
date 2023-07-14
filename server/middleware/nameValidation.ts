@@ -22,4 +22,4 @@ const registerValidation = (req: Request, res: Response, next: NextFunction) => 
   next();
 };
 
-module.exports = registerValidation;
+export default registerValidation;

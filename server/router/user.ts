@@ -1,9 +1,10 @@
 const router = require('express').Router();
-const userController = require('../controllers/userController');
-const auth = require('../middleware/auth');
-const emailValidation = require('../middleware/emailValidation');
-const passwordValidation = require('../middleware/passwordValidation');
-const nameValidation = require('../middleware/nameValidation');
+import * as userController from "../controllers/userController"
+import auth from "../middleware/auth"
+import emailValidation from '../middleware/emailValidation'
+import passwordValidation from '../middleware/passwordValidation'
+import nameValidation from '../middleware/nameValidation'
+
 // Register user
 router.post('/register', nameValidation, emailValidation, passwordValidation, userController.register);
 // User login

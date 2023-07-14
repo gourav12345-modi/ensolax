@@ -1,3 +1,4 @@
+import dotenv from 'dotenv';
 import express from 'express';
 import mongoose from 'mongoose';
 import helmet from 'helmet';
@@ -8,11 +9,25 @@ import postRouter from './router/post';
 import userRouter from './router/user';
 import { errorHandler } from './middleware/errorHandler';
 
-require('dotenv').config();
+dotenv.config()
+
+if (!process.env.JWT_TOKEN_SECRET) {
+  console.error('JWT_TOKEN_SECRET environment variable is missing.');
+  process.exit(1);
+}
+
+if (process.env.NODE_ENV=='production') {
+  if(!process.env.DBURL) {
+    console.error('DBURL environment variable is missing.');
+    process.exit(1);
+  }
+}
 
 const app = express();
-const DBURL = 'mongodb://localhost:27017/ensolax';
+const DBURL = process.env.DBURL || 'mongodb://localhost:27017/ensolax';
 const PORT = process.env.PORT || 1300;
+
+
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
@@ -21,6 +36,7 @@ app.use((req, res, next) => {
   // res.setHeader('Access-Control-Allow-Credentials', true);
   next();
 });
+
 
 app.disable('x-powered-by');
 app.use(express.json());
